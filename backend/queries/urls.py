@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path('getQueries/', views.getQuery),
     path('postQuery/', views.postQuery),
+    path('getAnalytics/', views.getAnalytics),
 ]
