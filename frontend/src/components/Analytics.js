@@ -1,6 +1,25 @@
-import React from "react";
-import { Bar, Line } from "react-chartjs-2";
+import React, { useState } from "react";
+import SecureAxios from "../config/SecureAxios";
+
+import { Line } from "react-chartjs-2";
 export default function Analytics(props) {
+  const [pulledData, setPulledData] = useState({});
+
+  const getData = () => {
+    SecureAxios({
+      method: "GET",
+      url: "QueriesAPI/getAnalytics/",
+      data: {
+        start: "2021,03,16",
+        end: "2021,03,18",
+      },
+    })
+      .then((res) => setPulledData(res.data))
+      .catch((e) => console.log(e));
+
+    console.log(pulledData);
+  };
+
   const data = {
     labels: ["1", "2", "3", "4", "5", "6"],
     datasets: [
@@ -26,8 +45,19 @@ export default function Analytics(props) {
     },
   };
   return (
-    <div style={{width:"70%"}}>
-      <Line data={data} options={options} />
+    <div>
+      <div>
+        <button
+          onClick={() => {
+            getData();
+          }}
+        >
+          Get Data
+        </button>
+      </div>
+      <div style={{ width: "70%" }}>
+        <Line data={data} options={options} />
+      </div>
     </div>
   );
 }

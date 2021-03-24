@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from django.db.models import Count
-from django.core.serializers import serialize
-from django.core.serializers.json import DjangoJSONEncoder
-from django.http import JsonResponse
+from django.db.models import Q
 
 import json
+import datetime
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -34,23 +33,23 @@ def postQuery(request):
 
 @api_view(['GET'])
 def getAnalytics(request):
-    model_object = Query.objects.all().extra({'date': "date(date)"}).values(
+
+    print(request)
+    start_date = request.data["start"]
+    end_date = request.data["end"]
+
+    
+
+    start_year = int(start_date[:4])
+    start_month = int(start_date[5:7])
+    start_date = int(start_date[8:])
+
+    end_year = int(end_date[:4])
+    end_month = int(end_date[5:7])
+    end_date = int(end_date[8:])
+
+    model_objects = Query.objects.filter(Q(date__gte=datetime.date(start_year, start_month, start_date)) & Q(date__lte=datetime.date(end_year, end_month, end_date))).extra({'date': "date(date)"}).values(
         'date').annotate(created_at=Count('pk'))
-    results = []
 
-    for Data in model_object:
-        result={
-            "Date": Data.date,
-            "Created_at": Data.created_at
-        }
-        results.append(result)
-
-    return Response(results)
-
-
-    # serializers_object = json.loads(serialize('json',model_object))
-
-
-    # return JsonResponse({'data':serializers_object},encoder=ExtendedEncoder)
-    # # serializer_object = QuerySerializer(model_object, many=True)
-    # # return Response(serialized_object.data)
+    serialized = list(model_objects)
+    return Response(serialized)
