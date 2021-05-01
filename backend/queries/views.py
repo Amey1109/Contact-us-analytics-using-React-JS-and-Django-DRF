@@ -31,14 +31,10 @@ def postQuery(request):
         return Response(serializer_object.errors)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def getAnalytics(request):
-
-    print(request)
-    start_date = request.data["start"]
-    end_date = request.data["end"]
-
-    
+    start_date = request.data["start_date"]
+    end_date = request.data["end_date"]
 
     start_year = int(start_date[:4])
     start_month = int(start_date[5:7])
@@ -49,7 +45,7 @@ def getAnalytics(request):
     end_date = int(end_date[8:])
 
     model_objects = Query.objects.filter(Q(date__gte=datetime.date(start_year, start_month, start_date)) & Q(date__lte=datetime.date(end_year, end_month, end_date))).extra({'date': "date(date)"}).values(
-        'date').annotate(created_at=Count('pk'))
+        'date').annotate(Count=Count('pk'))
 
     serialized = list(model_objects)
     return Response(serialized)

@@ -46,8 +46,8 @@ label{
 
 .button-container{
   padding: 10px;
-  position: relative;
   left: 750px;
+  float: right;
 }
 .nav-buttons{
   border: none;
