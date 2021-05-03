@@ -32,6 +32,10 @@ export default function Analytics(props) {
       .catch((e) => console.log(e));
   };
 
+  const setEndDate = async (e) => {
+    await setInputEndDate(e.target.value);
+  };
+
   const data = {
     labels: analyzedDate,
     datasets: [
@@ -56,6 +60,11 @@ export default function Analytics(props) {
       ],
     },
   };
+
+  if (inputStartDate || inputEndDate) {
+    getData();
+  }
+
   return (
     <div>
       <div style={{ marginLeft: "7%" }}>
@@ -69,7 +78,6 @@ export default function Analytics(props) {
         <input
           type="date"
           onChange={(e) => {
-            getData();
             setInputEndDate(e.target.value);
           }}
         />

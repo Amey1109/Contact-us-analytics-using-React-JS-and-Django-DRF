@@ -1,10 +1,17 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import ContactUs from "./ContactUs";
 import Analytics from "./Analytics";
 import icon from "../assets/imgs/icon.png";
 
 export default function Home(props) {
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState("contactus");
+  let history = useHistory();
+
+  const logout = () => {
+    localStorage.clear();
+    history.push("/");
+  };
   return (
     <div>
       <div style={{ display: "block", marginBottom: "2%" }}>
@@ -13,11 +20,13 @@ export default function Home(props) {
           src={icon}
         />
 
+        <label>Algospace</label>
+
         <div className="button-container" style={{ display: "inline-block" }}>
           <button
             className="nav-buttons"
             onClick={() => {
-              setToggle(!toggle);
+              setToggle("contactus");
             }}
           >
             Contact Us
@@ -25,22 +34,29 @@ export default function Home(props) {
           <button
             className="nav-buttons"
             onClick={() => {
-              setToggle(!toggle);
+              setToggle("anlytics");
             }}
           >
             Analytics
           </button>
-          <button className="nav-buttons">Logout</button>
+          <button
+            className="nav-buttons"
+            onClick={() => {
+              logout();
+            }}
+          >
+            Logout
+          </button>
         </div>
       </div>
 
-      {toggle ? (
+      {toggle == "contactus" ? (
         <div>
-          <Analytics />
+          <ContactUs toggle={toggle} setToggle={setToggle} />
         </div>
       ) : (
         <div>
-          <ContactUs />
+          <Analytics />
         </div>
       )}
     </div>

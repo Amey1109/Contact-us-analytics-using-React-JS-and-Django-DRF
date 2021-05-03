@@ -1,47 +1,37 @@
-import React,{useState} from "react";
-import {Redirect} from "react-router-dom"
+import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 
 import FacebookLogin from "react-facebook-login";
 
 import GoogleLogin from "react-google-login";
 
 export default function Login() {
-
-  const [status,setStatus] = useState(false)
-  const [data, setData] = useState({});
-
   const responseFacebook = (response) => {
-    console.log("This is response: ",response);
-    localStorage.setItem("data",JSON.stringify(response))
-    setData(response)
-    console.log(data)
-    // console.log("This is Data:",data)
-    // console.log(data.name)
-
+    console.log(response);
     if (response) {
-      setStatus(true);
-    } else {
-      setStatus(false);
+      localStorage.setItem("name", response.name);
+      localStorage.setItem("accessToken", response.accessToken);
+      window.location.reload();
     }
-    
   };
 
   const responseGoogle = (response) => {
-    console.log(response.profileObj);
-    setStatus(true)
+    console.log(response);
+    if (response) {
+      localStorage.setItem("name", response.gt.Ue);
+      window.location.reload();
+    }
   };
 
-  if (status){
-    return <Redirect to="/home"/>
+  if (localStorage.name) {
+    return <Redirect to="/home" />;
   }
-  
 
   return (
-    
     <div style={{ width: "45%", marginTop: "13%", marginLeft: "25%" }}>
       <div class="card text-center">
         <div class="card-header">
-          Welcome to <strong>algospace</strong>
+          Welcome to <strong>Algospace</strong>
         </div>
         <div class="card-body">
           <h5 class="card-title">Log In with your social accounts</h5>
@@ -52,13 +42,13 @@ export default function Login() {
                 //autoLoad={true}
                 fields="name,email,picture"
                 onClick={() => {
-                  console.log("Clicked Me")
+                  console.log("Clicked Me");
                 }}
                 callback={responseFacebook}
                 icon="fa-facebook"
               />
             </div>
-            <div style={{ marginTop: "5%",marginBottom:"2%" }}>
+            <div style={{ marginTop: "5%", marginBottom: "2%" }}>
               <GoogleLogin
                 clientId="684429798600-hvp7armkcqe2kfkclco8fhc8qkojt6vr.apps.googleusercontent.com"
                 buttonText="Login with Google"
@@ -71,7 +61,6 @@ export default function Login() {
         </div>
         <div class="card-footer text-muted">Copyright 2021-2022</div>
       </div>
-      {console.log(status)}
     </div>
   );
 }

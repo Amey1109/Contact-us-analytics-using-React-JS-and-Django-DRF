@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import Recaptcha from "react-recaptcha";
 
 import SecureAxios from "../config/SecureAxios";
@@ -9,19 +10,27 @@ export default function Home(props) {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [isVerified, setIsVerified] = useState(false);
+
   const handleSubmit = () => {
-    SecureAxios({
-      method: "POST",
-      url: "QueriesAPI/postQuery/",
-      data: {
-        fname: fname,
-        lname: lname,
-        email: email,
-        subject: subject,
-      },
-    })
-      .then((res) => alert("Query submitted"))
-      .catch((e) => console.log(e));
+    if (fname && lname && email && subject) {
+      SecureAxios({
+        method: "POST",
+        url: "QueriesAPI/postQuery/",
+        data: {
+          fname: fname,
+          lname: lname,
+          email: email,
+          subject: subject,
+        },
+      })
+        .then((res) => {
+          alert("Query submitted");
+          props.setToggle("anlytics");
+        })
+        .catch((e) => console.log(e));
+    } else {
+      alert("Please fill the data");
+    }
   };
 
   const verifyCallback = (response) => {
@@ -44,6 +53,7 @@ export default function Home(props) {
           type="text"
           id="fname"
           name="firstname"
+          required
           onChange={(e) => {
             setFname(e.target.value);
           }}
@@ -53,6 +63,7 @@ export default function Home(props) {
           type="text"
           id="lname"
           name="lastname"
+          required
           onChange={(e) => {
             setLname(e.target.value);
           }}
@@ -62,6 +73,7 @@ export default function Home(props) {
           type="email"
           id="lname"
           name="lastname"
+          required
           onChange={(e) => {
             setEmail(e.target.value);
           }}
@@ -70,6 +82,7 @@ export default function Home(props) {
         <textarea
           id="subject"
           name="subject"
+          required
           style={{ height: "200px" }}
           onChange={(e) => {
             setSubject(e.target.value);

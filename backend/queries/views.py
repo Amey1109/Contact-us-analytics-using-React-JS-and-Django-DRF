@@ -35,7 +35,7 @@ def postQuery(request):
 def getAnalytics(request):
     start_date = request.data["start_date"]
     end_date = request.data["end_date"]
-
+    
     start_year = int(start_date[:4])
     start_month = int(start_date[5:7])
     start_date = int(start_date[8:])
